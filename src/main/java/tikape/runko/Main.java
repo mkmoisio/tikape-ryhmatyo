@@ -2,7 +2,6 @@ package tikape.runko;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import spark.ModelAndView;
 import static spark.Spark.*;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -28,28 +27,42 @@ public class Main {
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
         
-        get("/:id", (req, res) -> {            
+        get("/alue/:id", (req, res) -> { 
+            res.redirect("/alue/" + Integer.parseInt(req.params(":id")) + "/sivu/1");
+            return "";
+        });
+        
+        get("/alue/:id/sivu/:nro", (req,res) -> {
             HashMap<String, Object> data = new HashMap<>();
-
+            
+            Integer nro = Integer.parseInt(req.params(":nro"));
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":id")));
+            List<Aihe> aiheet = aiheDao.findAllInAluePerPage(alue, nro);
             
             data.put("alue", alue);
-            data.put("aiheet", aiheDao.findAllInAlue(alue));
+            data.put("aiheet", aiheet);
+            data.put("sivu", nro);
             
             return new ModelAndView(data, "area");
         }, new ThymeleafTemplateEngine());
         
-        get("/:aid/:id", (req, res) -> {
+        get("/alue/:aid/aihe/:id", (req, res) -> {
+            res.redirect("/alue/" + req.params(":aid") + "/aihe/" + req.params(":id") + "/sivu/1");
+            return "";
+        });
+        
+        get("/alue/:aid/aihe/:id/sivu/:nro", (req,res) -> {
             HashMap<String, Object> data = new HashMap();
-
+            
+            Integer nro = Integer.parseInt(req.params(":nro"));
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":aid")));
             Aihe aihe = aiheDao.findOne(Integer.parseInt(req.params(":id")));
-            List<Viesti> viestit = viestiDao.findAllInAihe(aihe);
+            List<Viesti> viestit = viestiDao.findAllInAihePerPage(aihe, nro, 10);
             
             data.put("alue", alue);
             data.put("aihe", aihe);
             data.put("viestit", viestit);
-
+            
             return new ModelAndView(data, "thread");
         }, new ThymeleafTemplateEngine());
         
@@ -60,11 +73,11 @@ public class Main {
             
             alue = alueDao.create(alue);
 
-            res.redirect("/" + alue.getTunnus());
+            res.redirect("/alue/" + alue.getTunnus());
             return ""; 
         });
         
-        post("/:alueTunnus/addAihe", (req, res) -> {
+        post("/alue/:alueTunnus/addAihe", (req, res) -> {
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueTunnus")));
             String aiheAloittaja = req.queryParams("aiheAloittaja");
             String aiheOtsikko = req.queryParams("aiheOtsikko");
@@ -77,11 +90,11 @@ public class Main {
             Viesti viesti = new Viesti(aihe, viestiTeksti, aiheAloittaja, aihe.getLuotu());
             viesti = viestiDao.create(viesti);            
             
-            res.redirect("/" + req.params(":alueTunnus") + "/" + aihe.getTunnus());
+            res.redirect("/alue/" + req.params(":alueTunnus") + "/aihe/" + aihe.getTunnus());
             return ""; 
         });
         
-        post("/:alueTunnus/:aiheTunnus/addViesti", (req, res) -> {
+        post("/alue/:alueTunnus/aihe/:aiheTunnus/addViesti", (req, res) -> {
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueTunnus")));
             Aihe aihe = aiheDao.findOne(Integer.parseInt(req.params(":aiheTunnus")));
             String viestiTeksti = req.queryParams("teksti");
@@ -90,7 +103,7 @@ public class Main {
             Viesti viesti = new Viesti(aihe, viestiTeksti, viestiLahettaja);
             viesti = viestiDao.create(viesti);
             
-            res.redirect("/" + alue.getTunnus() + "/" + aihe.getTunnus());
+            res.redirect("/alue/" + alue.getTunnus() + "/aihe/" + aihe.getTunnus());
             return "";
         });
     }

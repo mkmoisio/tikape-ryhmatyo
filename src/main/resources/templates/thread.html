@@ -73,7 +73,7 @@
             <h1>Yksisarvisten keskustelufoorumi</h1>
             <h3>
                 <a th:href="@{~/}">Koti</a> > 
-                <a th:href="@{~/{id}(id=${alue.tunnus})}">
+                <a th:href="@{~/alue/{id}(id=${alue.tunnus})}">
                     <span th:text="${alue.nimi}">Alue</span>
                 </a> > 
                 <span th:text="${aihe.otsikko}">Aihe</span>
@@ -100,7 +100,7 @@
                         <p class="pBold">Kirjoita viesti</p>
 
                         <form method="POST" 
-                              th:action="@{~/{alueTunnus}/{aiheTunnus}/addViesti(alueTunnus=${alue.tunnus}, aiheTunnus=${aihe.tunnus})}">
+                              th:action="@{~/alue/{alueTunnus}/aihe/{aiheTunnus}/addViesti(alueTunnus=${alue.tunnus}, aiheTunnus=${aihe.tunnus})}">
                             Nimesi (max 20 merkki&auml;): <br/>
                             <input type="text" name="viestiLahettaja" maxlength="20"/> <br/>
 

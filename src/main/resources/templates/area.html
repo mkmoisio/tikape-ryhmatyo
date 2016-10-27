@@ -78,7 +78,7 @@
                 <tr th:each="aihe : ${aiheet}">
 
                     <td>
-                       <a th:href="@{~/{aid}/{id}(aid=${alue.tunnus}, id=${aihe.tunnus})}">
+                       <a th:href="@{~/alue/{aid}/aihe/{id}(aid=${alue.tunnus}, id=${aihe.tunnus})}">
                             <span th:text="${aihe.otsikko}"> </span>
                         </a>
                     </td>
@@ -100,7 +100,7 @@
 
                         <p class="pBold">Lis&auml;&auml; uusi aihe</p>
 
-                        <form method="POST" th:action="@{~/{alueTunnus}/addAihe(alueTunnus=${alue.tunnus})}">
+                        <form method="POST" th:action="@{~/alue/{alueTunnus}/addAihe(alueTunnus=${alue.tunnus})}">
                             Nimesi (max 20 merkki&auml;): <br/>
                             <input type="text" name="aiheAloittaja" maxlength="20"/> <br/>
 
