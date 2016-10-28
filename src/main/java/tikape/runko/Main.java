@@ -106,5 +106,8 @@ public class Main {
             res.redirect("/alue/" + alue.getTunnus() + "/aihe/" + aihe.getTunnus());
             return "";
         });
+        
+        Cli cli = new Cli(database);
+        cli.start();
     }
 }

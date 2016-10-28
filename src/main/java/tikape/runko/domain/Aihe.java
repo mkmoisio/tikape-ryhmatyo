@@ -113,4 +113,12 @@ public class Aihe {
     public void setViimeisinViesti(Timestamp viimeisin_viesti) {
         this.viimeisin_viesti = viimeisin_viesti;
     }
+    
+    @Override
+    public String toString() {
+        return 
+                this.tunnus + " " + this.alue + " " + this.aloittaja + " " 
+                + this.sisalto + " " + this.otsikko + " " + this.luotu + " "
+                + this.viestit + " " + this.viimeisin_viesti + " " + this.viestimaara;
+    }
 }

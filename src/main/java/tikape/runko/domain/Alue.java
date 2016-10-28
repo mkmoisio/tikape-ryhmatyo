@@ -78,4 +78,9 @@ public class Alue {
     public void setViimeisinViesti(Timestamp viimeisin_viesti) {
         this.viimeisin_viesti = viimeisin_viesti;
     }
+    
+    @Override
+    public String toString() {
+        return this.tunnus + " " + this.nimi + " " + this.kuvaus + " " + this.viimeisin_viesti + " " + this.viestimaara + "\n" + this.aiheet;
+    }
 }

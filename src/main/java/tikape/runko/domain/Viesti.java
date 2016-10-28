@@ -74,4 +74,9 @@ public class Viesti {
     public void setLahetetty(Timestamp lahetetty) {
         this.lahetetty = lahetetty;
     }
+    
+    @Override
+    public String toString() {
+        return this.tunnus + " " + this.aihe + " " + this.teksti + " " + this.lahettaja + " " + this.lahetetty;
+    }
 }
