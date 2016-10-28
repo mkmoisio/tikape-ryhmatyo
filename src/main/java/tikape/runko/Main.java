@@ -1,5 +1,6 @@
 package tikape.runko;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import spark.ModelAndView;
@@ -27,41 +28,69 @@ public class Main {
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
         
-        get("/alue/:id", (req, res) -> { 
-            res.redirect("/alue/" + Integer.parseInt(req.params(":id")) + "/sivu/1");
-            return "";
-        });
-        
-        get("/alue/:id/sivu/:nro", (req,res) -> {
+        get("/alue/:id", (req,res) -> {
             HashMap<String, Object> data = new HashMap<>();
+
+            Integer sivuNro = 1;
             
-            Integer nro = Integer.parseInt(req.params(":nro"));
+            if (req.queryParams().contains("sivu")) {
+                sivuNro = Integer.parseInt(req.queryParams("sivu"));
+            } 
+            
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":id")));
-            List<Aihe> aiheet = aiheDao.findAllInAluePerPage(alue, nro);
+            List<Aihe> aiheet = aiheDao.findAllInAluePerPage(alue, sivuNro);
+            
+            Integer aiheMaara = aiheDao.countAllInAlue(alue);
+            Integer sivuMaara = (aiheMaara / 10) + 1;
+            
+            if (sivuNro > 1) {
+                data.put("edellinen", sivuNro - 1);
+            }
+            
+            if (sivuNro < sivuMaara) {
+                data.put("seuraava", sivuNro + 1);
+            }
             
             data.put("alue", alue);
             data.put("aiheet", aiheet);
-            data.put("sivu", nro);
+            data.put("sivu", sivuNro);
             
             return new ModelAndView(data, "area");
         }, new ThymeleafTemplateEngine());
         
-        get("/alue/:aid/aihe/:id", (req, res) -> {
-            res.redirect("/alue/" + req.params(":aid") + "/aihe/" + req.params(":id") + "/sivu/1");
-            return "";
-        });
-        
-        get("/alue/:aid/aihe/:id/sivu/:nro", (req,res) -> {
+        get("/alue/:alueid/aihe/:aiheid", (req,res) -> {
             HashMap<String, Object> data = new HashMap();
             
-            Integer nro = Integer.parseInt(req.params(":nro"));
-            Alue alue = alueDao.findOne(Integer.parseInt(req.params(":aid")));
-            Aihe aihe = aiheDao.findOne(Integer.parseInt(req.params(":id")));
-            List<Viesti> viestit = viestiDao.findAllInAihePerPage(aihe, nro, 10);
+            Integer sivuNro = 1;
+            Integer raja = 5;
             
+            if (req.queryParams().contains("sivu")) {
+                sivuNro = Integer.parseInt(req.queryParams("sivu"));
+            } 
+            
+            if (req.queryParams().contains("raja")) {
+                raja = Integer.parseInt(req.queryParams("raja"));
+            } 
+            
+            Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueid")));
+            Aihe aihe = aiheDao.findOne(Integer.parseInt(req.params(":aiheid")));
+            List<Viesti> viestit = viestiDao.findAllInAihePerPage(aihe, sivuNro, raja);
+
+            Integer sivuMaara = (aihe.getViestimaara() / raja) + 1;
+            
+            if (sivuNro > 1) {
+                data.put("edellinen", sivuNro - 1);
+            }
+            
+            if (sivuNro < sivuMaara) {
+                data.put("seuraava", sivuNro + 1);
+            }
+            
+            data.put("indeksi", raja * (sivuNro - 1) + 1);
             data.put("alue", alue);
             data.put("aihe", aihe);
             data.put("viestit", viestit);
+            data.put("sivu", sivuNro);
             
             return new ModelAndView(data, "thread");
         }, new ThymeleafTemplateEngine());
@@ -88,7 +117,7 @@ public class Main {
             aihe = aiheDao.create(aihe);
             
             Viesti viesti = new Viesti(aihe, viestiTeksti, aiheAloittaja, aihe.getLuotu());
-            viesti = viestiDao.create(viesti);            
+            viestiDao.create(viesti);            
             
             res.redirect("/alue/" + req.params(":alueTunnus") + "/aihe/" + aihe.getTunnus());
             return ""; 
@@ -101,7 +130,7 @@ public class Main {
             String viestiLahettaja = req.queryParams("viestiLahettaja");
             
             Viesti viesti = new Viesti(aihe, viestiTeksti, viestiLahettaja);
-            viesti = viestiDao.create(viesti);
+            viestiDao.create(viesti);
             
             res.redirect("/alue/" + alue.getTunnus() + "/aihe/" + aihe.getTunnus());
             return "";

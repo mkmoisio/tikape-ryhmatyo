@@ -32,6 +32,22 @@
             .time {
                 font-style: italic;
             }
+            
+            #sivunav {
+                width: 100%;
+                font-weight:bold;
+                color:#999;
+            }
+            
+            #sivunro {
+                position: relative;
+                float: right;
+                margin-right: 2px;
+            }
+            
+            a:hover, a:visited, a:link, a:active {
+                text-decoration: none;
+            }
 
             table {
                 table-layout: fixed;
@@ -39,7 +55,7 @@
                 border: 1px solid black;
                 font-size: 16px;
 
-                margin-bottom: 20px;
+                margin-bottom: 2px;
                 caption-side: bottom;
                 border-spacing: 0;
                 color: #333;
@@ -93,6 +109,20 @@
                     </td>
                 </tr>
             </table>
+            
+            <div id="sivunav">
+                <a th:href="@{~/alue/{aid} (aid=${alue.tunnus}, sivu=${edellinen})}">
+                    <span th:if="${edellinen != null}">edellinen</span>
+                </a>
+                
+                <span th:if="${edellinen != null and seuraava != null}"> | </span>
+                
+                <a th:href="@{~/alue/{aid} (aid=${alue.tunnus}, sivu=${seuraava})}">
+                    <span th:if="${seuraava != null}">seuraava</span>
+                </a>
+                
+                <span id="sivunro" th:text="${sivu}"></span>
+            </div>
 
             <table>
                 <tr>
@@ -100,7 +130,7 @@
 
                         <p class="pBold">Lis&auml;&auml; uusi aihe</p>
 
-                        <form method="POST" th:action="@{~/alue/{alueTunnus}/addAihe(alueTunnus=${alue.tunnus})}">
+                        <form method="POST" th:action="@{~/alue/{alueTunnus}/addAihe(alueTunnus=${alue.tunnus}, sivu=${seuraava})}">
                             Nimesi (max 20 merkki&auml;): <br/>
                             <input type="text" name="aiheAloittaja" maxlength="20"/> <br/>
 

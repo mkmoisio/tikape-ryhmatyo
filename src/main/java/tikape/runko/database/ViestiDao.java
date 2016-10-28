@@ -149,12 +149,12 @@ public class ViestiDao implements Dao<Viesti, Integer> {
     public List<Viesti> findAllInAihePerPage(Aihe aihe, Integer pageNum, Integer msgLimit) throws SQLException {
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement(
-            "SELECT * FROM Viesti WHERE aihe = ? ORDER BY lahetetty LIMIT ?, ?;"
+            "SELECT * FROM Viesti WHERE aihe = ? ORDER BY lahetetty LIMIT ? OFFSET ?;"
         );
-        
+
         stmt.setInt(1, aihe.getTunnus());
-        stmt.setInt(2, msgLimit * (pageNum - 1) );
-        stmt.setInt(3, msgLimit * pageNum);
+        stmt.setInt(3, msgLimit * (pageNum - 1) );
+        stmt.setInt(2, msgLimit);
         
         ResultSet rs = stmt.executeQuery();
         

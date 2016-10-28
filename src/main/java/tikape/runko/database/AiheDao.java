@@ -214,12 +214,12 @@ public class AiheDao implements Dao<Aihe, Integer> {
             "SELECT a.*, MAX(lahetetty) as viimeisin_viesti, COUNT(*) as viestimaara FROM Aihe a "
 	  + "LEFT JOIN Viesti v ON a.tunnus = v.aihe "
 	  + "WHERE a.alue = ? GROUP BY a.tunnus "
-          + "ORDER BY viimeisin_viesti DESC LIMIT ?, ?;"
+          + "ORDER BY viimeisin_viesti DESC LIMIT ? OFFSET ?;"
         );
         
         stmt.setInt(1, alue.getTunnus());
-        stmt.setInt(2, 10 * (pageNum - 1) );
-        stmt.setInt(3, 10 * pageNum);
+        stmt.setInt(3, 10 * (pageNum - 1) );
+        stmt.setInt(2, 10);
         
         ResultSet rs = stmt.executeQuery();
         
@@ -237,6 +237,25 @@ public class AiheDao implements Dao<Aihe, Integer> {
         connection.close();
 
         return aiheet;
+    }
+    
+    public Integer countAllInAlue(Alue alue) throws SQLException {
+        Connection connection = database.getConnection();
+         
+        PreparedStatement stmt = connection.prepareStatement(
+            "SELECT COUNT(*) as aihemaara FROM Aihe WHERE alue = ?;"
+        );
+        
+        stmt.setInt(1, alue.getTunnus());
+        
+        ResultSet rs = stmt.executeQuery();
+        Integer aihemaara = rs.getInt("aihemaara");
+        
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return aihemaara;
     }
     
     public Aihe collect(ResultSet rs) throws SQLException {

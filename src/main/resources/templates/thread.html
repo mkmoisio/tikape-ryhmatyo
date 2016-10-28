@@ -31,6 +31,23 @@
             
             .time {
                 font-style: italic;
+                font-size: 14px;
+            }
+            
+            #sivunav {
+                width: 100%;
+                font-weight:bold;
+                color:#999;
+            }
+            
+            #sivunro {
+                position: relative;
+                float: right;
+                margin-right: 2px;
+            }
+            
+            a:hover, a:visited, a:link, a:active {
+                text-decoration: none;
             }
 
             table {
@@ -39,7 +56,7 @@
                 border: 1px solid black;
                 font-size: 16px;
 
-                margin-bottom: 20px;
+                margin-bottom: 2px;
                 caption-side: bottom;
                 border-spacing: 0;
                 color: #333;
@@ -78,20 +95,34 @@
                 </a> > 
                 <span th:text="${aihe.otsikko}">Aihe</span>
             </h3>
-
+            
             <table>
                 <tr>
                     <td>
-                <ol type="1">
+                <ol type="1" th:start="${indeksi}">
                     <li  th:each="msg : ${viestit}">
                         <span th:text="${msg.lahettaja}" class="author"></span>
-                        <span th:text="${msg.lahetetty}" class="time"></span><br />
+                        <span th:text="${msg.lahetetty}" class="time"></span><br/>
                         <span th:text="${msg.teksti}"></span>
                     </li>         
                 </ol>
                     </td>
                 </tr>
             </table>
+            
+            <div id="sivunav">
+                <a th:href="@{~/alue/{alueid}/aihe/{aiheid} (alueid=${alue.tunnus}, aiheid=${aihe.tunnus}, sivu=${edellinen})}">
+                    <span id="edellinen" th:if="${edellinen != null}">edellinen</span>
+                </a>
+                
+                <span th:if="${edellinen != null and seuraava != null}"> | </span>
+
+                <a th:href="@{~/alue/{alueid}/aihe/{aiheid} (alueid=${alue.tunnus}, aiheid=${aihe.tunnus}, sivu=${seuraava})}">
+                    <span id="seuraava" th:if="${seuraava != null}">seuraava</span>
+                </a>
+                
+                <span id="sivunro" th:text="${sivu}"></span>
+            </div>
 
             <table>
                 <tr>
@@ -100,7 +131,7 @@
                         <p class="pBold">Kirjoita viesti</p>
 
                         <form method="POST" 
-                              th:action="@{~/alue/{alueTunnus}/aihe/{aiheTunnus}/addViesti(alueTunnus=${alue.tunnus}, aiheTunnus=${aihe.tunnus})}">
+                              th:action="@{~/alue/{alueTunnus}/aihe/{aiheTunnus}/addViesti(alueTunnus=${alue.tunnus}, aiheTunnus=${aihe.tunnus}, sivu=${seuraava})}">
                             Nimesi (max 20 merkki&auml;): <br/>
                             <input type="text" name="viestiLahettaja" maxlength="20"/> <br/>
 
