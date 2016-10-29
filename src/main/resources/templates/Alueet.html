@@ -22,6 +22,7 @@
                 border-bottom: thin solid rgba(100, 100, 100, 0.6);
                 width: 60%;
                 margin-left: 20%;
+                color: #003765;
             }
             
             h2 {
@@ -39,6 +40,15 @@
             
             .time {
                 font-style: italic;
+            }
+            
+            .lahetys {
+              border: thin solid rgba(100, 100, 100, 0.6);
+              padding: 6px;
+            }
+            
+            .kuvaaja {
+                font-size: 14px;
             }
 
             table {
@@ -73,6 +83,17 @@
                 height: 150px;
                 max-width: 100%;
             }
+            
+            .laheta {
+                background-color: white;
+                color: #005987;
+                border: 2px solid #008CBA;
+            }
+            
+            .laheta:hover {
+                background-color: #008CBA;
+                color: white;
+            }
         </style>
     </head>
 
@@ -103,25 +124,19 @@
 
             </table>
 
-            <table>
-                <tr>
-                    <td>
+            <div class="lahetys">
+                    <p class="pBold">Lis&auml;&auml; uusi alue</p>
 
-                        <p class="pBold">Lis&auml;&auml; uusi alue</p>
+                    <form method="POST" th:action="@{~/addAlue}">
+                    <span class="kuvaaja">Alueen nimi (max 40 merkki&auml;):</span> <br/>
+                    <input type="text" name="alueOtsikko" maxlength="20"/> <br/>
 
-                        <form method="POST" th:action="@{~/addAlue}">
-                            Aluen otsikko (max 20 merkki&auml;): <br/>
-                            <input type="text" name="alueOtsikko" maxlength="20"/> <br/>
+                    <span class="kuvaaja">Alueen kuvaus (max 100 merkki&auml;): </span><br/>
+                    <input type="text" class="long" name="alueKuvaus" maxlength="100"/> <br/>
 
-                            Aluen kuvaus (max 100 merkki&auml;): <br/>
-                            <input type="text" class="long" name="alueKuvaus" maxlength="100"/> <br/>
-
-                            <input type="submit" value="Lis&auml;&auml; alue"/>
-                        </form>
-
-                    </td>
-                </tr>
-            </table>
+                    <input class="laheta" type="submit" value="Lis&auml;&auml; alue"/>
+                </form>
+            </div>
         </div>
         
     </body>

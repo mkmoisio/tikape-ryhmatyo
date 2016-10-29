@@ -23,6 +23,7 @@
                 border-bottom: thin solid rgba(100, 100, 100, 0.6);
                 width: 60%;
                 margin-left: 20%;
+                color: #003765;
             }
             
             h2 {
@@ -114,7 +115,7 @@
               padding: 6px;
             }
             
-            #lahetys {
+            .lahetys {
               border: thin solid rgba(100, 100, 100, 0.6);
               padding: 6px;
             }
@@ -153,6 +154,21 @@
                 border: 2px solid #008CBA; 
                 color: white;
             } 
+            
+            .kuvaaja {
+                font-size: 14px;
+            }
+            
+            .laheta {
+                background-color: white;
+                color: #005987;
+                border: 2px solid #008CBA;
+            }
+            
+            .laheta:hover {
+                background-color: #008CBA;
+                color: white;
+            }
         </style>
     </head>
 
@@ -225,19 +241,19 @@
                 <span id="sivunro" th:text="${sivu}"></span>
             </div>
 
-            <div id="lahetys">
+            <div class="lahetys">
                 <p class="pBold">Kirjoita viesti</p>
 
                 <form method="POST" 
                     th:action="@{~/alue/{alueTunnus}/aihe/{aiheTunnus}/addViesti(alueTunnus=${alue.tunnus}, aiheTunnus=${aihe.tunnus}, sivu=${sivu}, raja=${raja})}">
-                    Nimi (max 20 merkki&auml;): <br/>
+                    <span class="kuvaaja">Nimi (max 40 merkki&auml;): </span><br/>
                     <input type="text" name="viestiLahettaja" maxlength="20"/> <br/>
 
-                    Viesti (max 255 merkki&auml;): <br/>
+                    <span class="kuvaaja">Viesti (max 255 merkki&auml;): </span><br/>
                     <!--staattinen leveys, tämä vois skaalata ikkunan mukaan-->
                     <textarea cols="53" rows="5" name="teksti" maxlength="255"/><br/>
 
-                    <input type="submit" value="L&auml;het&auml; viesti"/>
+                    <input class="laheta" type="submit" value="L&auml;het&auml; viesti"/>
                 </form>
             </div>
 

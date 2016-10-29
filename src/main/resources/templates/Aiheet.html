@@ -23,6 +23,7 @@
                 border-bottom: thin solid rgba(100, 100, 100, 0.6);
                 width: 60%;
                 margin-left: 20%;
+                color: #003765;
             }            
             h2 {
                 font-size: 22px;
@@ -56,6 +57,15 @@
             a:hover, a:visited, a:link, a:active {
                 text-decoration: none;
             }
+            
+            .lahetys {
+              border: thin solid rgba(100, 100, 100, 0.6);
+              padding: 6px;
+            }
+            
+            .kuvaaja {
+                font-size: 14px;
+            }
 
             table {
                 table-layout: fixed;
@@ -82,6 +92,17 @@
             input[type=text].long {
                 width: 500px;
                 max-width: 100%;
+            }
+            
+            .laheta {
+                background-color: white;
+                color: #005987;
+                border: 2px solid #008CBA;
+            }
+            
+            .laheta:hover {
+                background-color: #008CBA;
+                color: white;
             }
         </style>
     </head>
@@ -132,33 +153,22 @@
                 <span id="sivunro" th:text="${sivu}"></span>
             </div>
 
-            <table>
-                <tr>
-                    <td>
+            <div class="lahetys">
+                    <p class="pBold">Lis&auml;&auml; uusi aihe</p>
 
-                        <p class="pBold">Lis&auml;&auml; uusi aihe</p>
+                    <form method="POST" th:action="@{~/alue/{alueTunnus}/addAihe(alueTunnus=${alue.tunnus}, sivu=${seuraava})}">
+                    <span class="kuvaaja">Nimi (max 40 merkki&auml;): </span>  <br/>
+                    <input type="text" name="aiheAloittaja" maxlength="20"/> <br/>
 
-                        <form method="POST" th:action="@{~/alue/{alueTunnus}/addAihe(alueTunnus=${alue.tunnus}, sivu=${seuraava})}">
-                            Nimesi (max 20 merkki&auml;): <br/>
-                            <input type="text" name="aiheAloittaja" maxlength="20"/> <br/>
+                    <span class="kuvaaja">Aiheen otsikko (max 255 merkki&auml;): </span>  <br/>
+                    <input type="text" name="aiheOtsikko" maxlength="30"/> <br/>
 
-                            Aiheen otsikko (max 30 merkki&auml;): <br/>
-                            <input type="text" name="aiheOtsikko" maxlength="30"/> <br/>
+                    <span class="kuvaaja">Aiheen sis&auml;lt&ouml; (max 255 merkki&auml;): </span>  <br/>
+                    <textarea cols="53" rows="5" name="aiheSisalto" maxlength="255"/><br/>
 
-                            Aiheen sis&auml;lt&ouml; (max 255 merkki&auml;): <br/>
-                            <!--<input type="text" class="long" name="aiheSisalto" maxlength="255"/> <br/>-->
-                            <textarea cols="53" rows="5" name="aiheSisalto" maxlength="255"/><br/>
-
-                            <!--Viesti (max 255 merkki&auml;): <br/>-->
-                            <!--staattinen leveys, tämä vois skaalata ikkunan mukaan-->
-                            <!--<textarea cols="53" rows="5" name="viesti" maxlength="255"/><br/>-->
-
-                            <input type="submit" value="Lis&auml;&auml; aihe"/>
-                        </form>
-
-                    </td>
-                </tr>
-            </table>
+                    <input class="laheta" type="submit" value="Lis&auml;&auml; aihe"/>
+                </form>
+            </div>
 
             <a href="/">Paluu</a>
         </div>
