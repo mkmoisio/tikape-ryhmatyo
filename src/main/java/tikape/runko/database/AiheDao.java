@@ -249,6 +249,11 @@ public class AiheDao implements Dao<Aihe, Integer> {
         stmt.setInt(1, alue.getTunnus());
         
         ResultSet rs = stmt.executeQuery();
+        
+        if (!rs.next()) {
+            return null;
+        }
+        
         Integer aihemaara = rs.getInt("aihemaara");
         
         rs.close();
