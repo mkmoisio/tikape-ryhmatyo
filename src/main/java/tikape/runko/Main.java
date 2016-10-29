@@ -111,13 +111,13 @@ public class Main {
             String aiheAloittaja = req.queryParams("aiheAloittaja");
             String aiheOtsikko = req.queryParams("aiheOtsikko");
             String aiheSisalto = req.queryParams("aiheSisalto");
-            String viestiTeksti = req.queryParams("viesti");
+            //String viestiTeksti = req.queryParams("viesti");
             
             Aihe aihe = new Aihe(alue ,aiheAloittaja, aiheSisalto, aiheOtsikko);
             aihe = aiheDao.create(aihe);
             
-            Viesti viesti = new Viesti(aihe, viestiTeksti, aiheAloittaja, aihe.getLuotu());
-            viestiDao.create(viesti);            
+            //Viesti viesti = new Viesti(aihe, viestiTeksti, aiheAloittaja, aihe.getLuotu());
+            //viestiDao.create(viesti);            
             
             res.redirect("/alue/" + req.params(":alueTunnus") + "/aihe/" + aihe.getTunnus());
             return ""; 
