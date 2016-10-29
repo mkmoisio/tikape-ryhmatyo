@@ -178,9 +178,6 @@
 
             <h1>Yksisarvisten keskustelufoorumi</h1>
             
-            
-            
-            
             <h2>
                 <a th:href="@{~/}">Koti</a> > 
                 <a th:href="@{~/alue/{id}(id=${alue.tunnus})}">
@@ -190,19 +187,17 @@
             </h2>
             
             <div class="topcontainer">
-                
 
-                
-            <h3>
-                <span th:text="${aihe.otsikko}">Aihe</span>
-            </h3>
-            
-            <div id="tiedot">
-                Aloittanut <span id="aloittaja"  th:text="${aihe.aloittaja}">Aloittaja</span> <br/>
-                Lis&auml;tty <span id="luotu"  th:text="${aihe.luotu}">Aloittaja</span>
-            </div>
-            
-            <span id="sisalto" th:text="${aihe.sisalto}">Sisalto</span>
+                <h3>
+                    <span th:text="${aihe.otsikko}">Aihe</span>
+                </h3>
+
+                <div id="tiedot">
+                    Aloittanut <span id="aloittaja"  th:text="${aihe.aloittaja}">Aloittaja</span> <br/>
+                    Lis&auml;tty <span id="luotu"  th:text="${aihe.luotu}">Aloittaja</span>
+                </div>
+
+                <span id="sisalto" th:text="${aihe.sisalto}">Sisalto</span>
             
             </div>
             
