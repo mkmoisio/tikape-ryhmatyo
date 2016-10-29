@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.net.*;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteConfig.Pragma;
 
@@ -21,11 +22,28 @@ public class Database<T> {
     }
 
     public Connection getConnection() throws SQLException {
-        SQLiteConfig sqLiteConfig = new SQLiteConfig();
-        Properties properties = sqLiteConfig.toProperties();
-        properties.setProperty(Pragma.DATE_STRING_FORMAT.pragmaName, "yyyy-MM-dd HH:mm:ss");
-        
-        return DriverManager.getConnection(databaseAddress, properties);
+        if (this.databaseAddress.contains("postgres")) {
+            try {
+                URI dbUri = new URI(databaseAddress);
+
+                String username = dbUri.getUserInfo().split(":")[0];
+                String password = dbUri.getUserInfo().split(":")[1];
+                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+                return DriverManager.getConnection(dbUrl, username, password);
+            } catch (Throwable t) {
+                System.out.println("Error: " + t.getMessage());
+                t.printStackTrace();
+            }
+        } else {
+            SQLiteConfig sqLiteConfig = new SQLiteConfig();
+            Properties properties = sqLiteConfig.toProperties();
+            properties.setProperty(Pragma.DATE_STRING_FORMAT.pragmaName, "yyyy-MM-dd HH:mm:ss");
+            
+            return DriverManager.getConnection(databaseAddress, properties);
+        }
+
+        return DriverManager.getConnection(databaseAddress);
     }
 
     public void init() {
