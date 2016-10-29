@@ -16,6 +16,15 @@
                 padding-bottom: 6px;
             }
             
+            h1 {
+                text-align: center;
+                color: #555;
+                font-size: 35px;
+                border-bottom: thin solid rgba(100, 100, 100, 0.6);
+                width: 60%;
+                margin-left: 20%;
+            }
+            
             h2 {
                 font-size: 22px;
                 /*padding-left: 20px;*/
@@ -46,6 +55,22 @@
                 margin-right: 2px;
             }
             
+            .topcontainer {
+                border: thin solid rgba(100, 100, 100, 0.6);
+                padding: 5px;
+                margin-bottom:10px;
+                
+                box-shadow: 0 0 6px 1px rgba(100, 100, 100, 0.5);
+            }
+            
+            #sisalto {
+                padding: 2px;
+                margin-top: 20px;
+                margin-bottom:20px;
+                font-size: 18px;
+                color: #333;
+            }
+            
             a:hover, a:visited, a:link, a:active {
                 text-decoration: none;
             }
@@ -53,14 +78,13 @@
             table {
                 table-layout: fixed;
                 width: 100%;
-                border: 1px solid black;
                 font-size: 16px;
-
+                margin-top: 10px;
                 margin-bottom: 2px;
                 caption-side: bottom;
                 border-spacing: 0;
                 color: #333;
-                box-shadow: 0 0 6px 1px rgba(100, 100, 100, 0.5)
+                box-shadow: 0 0 6px 1px rgba(100, 100, 100, 0.5);
             }
             
             tr, td, th {
@@ -88,6 +112,7 @@
         <div class="container">
 
             <h1>Yksisarvisten keskustelufoorumi</h1>
+            <div class="topcontainer">
             <h3>
                 <a th:href="@{~/}">Koti</a> > 
                 <a th:href="@{~/alue/{id}(id=${alue.tunnus})}">
@@ -95,6 +120,9 @@
                 </a> > 
                 <span th:text="${aihe.otsikko}">Aihe</span>
             </h3>
+            
+            <span id="sisalto" th:text="${aihe.sisalto}">Sisalto</span>
+            </div>
             
             <table>
                 <tr>
