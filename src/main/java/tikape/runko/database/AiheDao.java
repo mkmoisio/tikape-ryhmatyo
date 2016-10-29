@@ -49,7 +49,7 @@ public class AiheDao implements Dao<Aihe, Integer> {
         PreparedStatement stmt = connection.prepareStatement(
             "SELECT a.*, MAX(lahetetty) as viimeisin_viesti, COUNT(*) as viestimaara FROM Aihe a "
 	  + "LEFT JOIN Viesti v ON a.tunnus = v.aihe "
-	  + "WHERE a.tunnus = ?;"
+	  + "WHERE a.tunnus = ? GROUP BY a.tunnus;"
         );
         
         stmt.setInt(1, key);
