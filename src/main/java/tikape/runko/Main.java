@@ -78,7 +78,6 @@ public class Main {
             
             if (req.queryParams().contains("raja")) {
                 raja = Integer.parseInt(req.queryParams("raja"));
-                System.out.println(raja);
             } 
             
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueid")));
