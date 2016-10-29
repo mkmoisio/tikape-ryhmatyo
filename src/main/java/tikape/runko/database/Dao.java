@@ -2,7 +2,6 @@ package tikape.runko.database;
 
 import java.sql.*;
 import java.util.*;
-import tikape.runko.domain.Alue;
 
 public interface Dao<T, K> {
 
@@ -12,8 +11,7 @@ public interface Dao<T, K> {
 
     List<T> findAll() throws SQLException;
 
-    void update(K key, T t) throws SQLException;
-
     public List<T> findAllIn(Collection<K> keys) throws SQLException;
-
+    
+    public T collect(ResultSet rs) throws SQLException;
 }

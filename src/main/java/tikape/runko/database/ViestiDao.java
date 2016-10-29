@@ -111,11 +111,6 @@ public class ViestiDao implements Dao<Viesti, Integer> {
     }
 
     @Override
-    public void update(Integer key, Viesti t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public List<Viesti> findAllIn(Collection<Integer> keys) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -174,6 +169,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         return viestit;
     }
     
+    @Override
     public Viesti collect(ResultSet rs) throws SQLException {
         Integer tunnus = rs.getInt("tunnus");
         String teksti = rs.getString("teksti");

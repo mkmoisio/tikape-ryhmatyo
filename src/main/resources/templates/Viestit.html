@@ -114,6 +114,11 @@
               padding: 6px;
             }
             
+            #lahetys {
+              border: thin solid rgba(100, 100, 100, 0.6);
+              padding: 6px;
+            }
+            
             li {
                 margin-bottom: 6px;
                 font-size: 14px;
@@ -130,7 +135,24 @@
             input[type=text].long {
                 width: 500px;
                 max-width: 100%;
-            }            
+            }  
+            
+            .raja {
+                background-color: white;
+                color: black;
+                border: 2px solid #008CBA;
+            }
+            
+            .raja:hover {
+                background-color: #008CBA;
+                color: white;
+            }
+            
+            .vraja {
+                background-color: #008CBA; 
+                border: 2px solid #008CBA; 
+                color: white;
+            } 
         </style>
     </head>
 
@@ -168,10 +190,17 @@
             
             </div>
             
+            <form method="GET"
+                  th:action="@{~/alue/{alueid}/aihe/{aiheid} (alueid=${alue.tunnus}, aiheid=${aihe.tunnus})}">
+                <input th:classappend="${raja} == 4 ? vraja : raja" name="raja" type="submit" value="4"/>
+                <input th:classappend="${raja} == 8 ? vraja : raja" name="raja" type="submit" value="8"/>
+                <input th:classappend="${raja} == 16 ? vraja : raja" name="raja" type="submit" value="16"/>
+            </form>
+            
             <table>
                 <tr>
                     <td>
-                <ol type="1" th:start="${indeksi}">
+                <ol type="1" th:start="${offset}">
                     <li  th:each="msg : ${viestit}">
                         <span th:text="${msg.lahettaja}" class="author"></span>
                         <span th:text="${msg.lahetetty}" class="time"></span><br/>
@@ -183,40 +212,34 @@
             </table>
             
             <div id="sivunav">
-                <a th:href="@{~/alue/{alueid}/aihe/{aiheid} (alueid=${alue.tunnus}, aiheid=${aihe.tunnus}, sivu=${edellinen})}">
+                <a th:href="@{~/alue/{alueid}/aihe/{aiheid} (alueid=${alue.tunnus}, aiheid=${aihe.tunnus}, sivu=${edellinen}, raja=${raja})}">
                     <span id="edellinen" th:if="${edellinen != null}">edellinen</span>
                 </a>
                 
                 <span th:if="${edellinen != null and seuraava != null}"> | </span>
 
-                <a th:href="@{~/alue/{alueid}/aihe/{aiheid} (alueid=${alue.tunnus}, aiheid=${aihe.tunnus}, sivu=${seuraava})}">
+                <a th:href="@{~/alue/{alueid}/aihe/{aiheid} (alueid=${alue.tunnus}, aiheid=${aihe.tunnus}, sivu=${seuraava}, raja=${raja})}">
                     <span id="seuraava" th:if="${seuraava != null}">seuraava</span>
                 </a>
                 
                 <span id="sivunro" th:text="${sivu}"></span>
             </div>
 
-            <table>
-                <tr>
-                    <td>
+            <div id="lahetys">
+                <p class="pBold">Kirjoita viesti</p>
 
-                        <p class="pBold">Kirjoita viesti</p>
+                <form method="POST" 
+                    th:action="@{~/alue/{alueTunnus}/aihe/{aiheTunnus}/addViesti(alueTunnus=${alue.tunnus}, aiheTunnus=${aihe.tunnus}, sivu=${sivu}, raja=${raja})}">
+                    Nimi (max 20 merkki&auml;): <br/>
+                    <input type="text" name="viestiLahettaja" maxlength="20"/> <br/>
 
-                        <form method="POST" 
-                              th:action="@{~/alue/{alueTunnus}/aihe/{aiheTunnus}/addViesti(alueTunnus=${alue.tunnus}, aiheTunnus=${aihe.tunnus}, sivu=${seuraava})}">
-                            Nimesi (max 20 merkki&auml;): <br/>
-                            <input type="text" name="viestiLahettaja" maxlength="20"/> <br/>
+                    Viesti (max 255 merkki&auml;): <br/>
+                    <!--staattinen leveys, tämä vois skaalata ikkunan mukaan-->
+                    <textarea cols="53" rows="5" name="teksti" maxlength="255"/><br/>
 
-                            Viesti (max 255 merkki&auml;): <br/>
-                            <!--staattinen leveys, tämä vois skaalata ikkunan mukaan-->
-                            <textarea cols="53" rows="5" name="teksti" maxlength="255"/><br/>
-
-                            <input type="submit" value="L&auml;het&auml; viesti"/>
-                        </form>
-
-                    </td>
-                </tr>
-            </table>
+                    <input type="submit" value="L&auml;het&auml; viesti"/>
+                </form>
+            </div>
 
             <a th:href="@{~/{tmp} (tmp=${alue.tunnus})}">Paluu</a>
          

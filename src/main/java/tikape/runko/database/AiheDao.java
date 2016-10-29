@@ -115,11 +115,6 @@ public class AiheDao implements Dao<Aihe, Integer> {
     }
 
     @Override
-    public void update(Integer key, Aihe t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public List<Aihe> findAllIn(Collection<Integer> keys) throws SQLException {
         if (keys.isEmpty()) {
             return new ArrayList<>();
@@ -263,6 +258,7 @@ public class AiheDao implements Dao<Aihe, Integer> {
         return aihemaara;
     }
     
+    @Override
     public Aihe collect(ResultSet rs) throws SQLException {
         Integer tunnus = rs.getInt("tunnus");
         String aloittaja = rs.getString("aloittaja");

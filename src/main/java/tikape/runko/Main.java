@@ -12,20 +12,17 @@ import tikape.runko.domain.*;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-             // Käytetään testidataa
-                // asetetaan portti jos heroku antaa PORT-ympäristömuuttujan
         if (System.getenv("PORT") != null) {
             port(Integer.valueOf(System.getenv("PORT")));
         }
         
         String jdbcOsoite = "jdbc:sqlite:yksisarvistentestitietokanta.db";
-        // jos heroku antaa käyttöömme tietokantaosoitteen, otetaan se käyttöön
+
         if (System.getenv("DATABASE_URL") != null) {
             jdbcOsoite = System.getenv("DATABASE_URL");
         }
 
         Database database = new Database(jdbcOsoite);
-        database.init();
 
         AlueDao alueDao = new AlueDao(database);
         AiheDao aiheDao = new AiheDao(database, alueDao);
@@ -36,7 +33,7 @@ public class Main {
 
             map.put("alueet", alueDao.findAll());
 
-            return new ModelAndView(map, "index");
+            return new ModelAndView(map, "Alueet");
         }, new ThymeleafTemplateEngine());
         
         get("/alue/:id", (req,res) -> {
@@ -66,14 +63,14 @@ public class Main {
             data.put("aiheet", aiheet);
             data.put("sivu", sivuNro);
             
-            return new ModelAndView(data, "area");
+            return new ModelAndView(data, "Aiheet");
         }, new ThymeleafTemplateEngine());
         
         get("/alue/:alueid/aihe/:aiheid", (req,res) -> {
             HashMap<String, Object> data = new HashMap();
             
             Integer sivuNro = 1;
-            Integer raja = 5;
+            Integer raja = 4;
             
             if (req.queryParams().contains("sivu")) {
                 sivuNro = Integer.parseInt(req.queryParams("sivu"));
@@ -81,6 +78,7 @@ public class Main {
             
             if (req.queryParams().contains("raja")) {
                 raja = Integer.parseInt(req.queryParams("raja"));
+                System.out.println(raja);
             } 
             
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueid")));
@@ -97,13 +95,14 @@ public class Main {
                 data.put("seuraava", sivuNro + 1);
             }
             
-            data.put("indeksi", raja * (sivuNro - 1) + 1);
+            data.put("offset", raja * (sivuNro - 1) + 1);
             data.put("alue", alue);
             data.put("aihe", aihe);
             data.put("viestit", viestit);
             data.put("sivu", sivuNro);
+            data.put("raja", raja);
             
-            return new ModelAndView(data, "thread");
+            return new ModelAndView(data, "Viestit");
         }, new ThymeleafTemplateEngine());
         
         post("/addAlue", (req, res) -> {
@@ -122,13 +121,9 @@ public class Main {
             String aiheAloittaja = req.queryParams("aiheAloittaja");
             String aiheOtsikko = req.queryParams("aiheOtsikko");
             String aiheSisalto = req.queryParams("aiheSisalto");
-            //String viestiTeksti = req.queryParams("viesti");
             
             Aihe aihe = new Aihe(alue ,aiheAloittaja, aiheSisalto, aiheOtsikko);
-            aihe = aiheDao.create(aihe);
-            
-            //Viesti viesti = new Viesti(aihe, viestiTeksti, aiheAloittaja, aihe.getLuotu());
-            //viestiDao.create(viesti);            
+            aihe = aiheDao.create(aihe);         
             
             res.redirect("/alue/" + req.params(":alueTunnus") + "/aihe/" + aihe.getTunnus());
             return ""; 

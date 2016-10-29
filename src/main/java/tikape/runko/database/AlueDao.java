@@ -134,10 +134,6 @@ public class AlueDao implements Dao<Alue, Integer>{
     }
     
     @Override
-    public void update(Integer key, Alue t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     public Alue collect(ResultSet rs) throws SQLException {
         Integer tunnus = rs.getInt("tunnus");
         String nimi = rs.getString("nimi");
