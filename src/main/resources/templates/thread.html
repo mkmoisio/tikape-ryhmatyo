@@ -36,6 +36,7 @@
             
             .author {
                 font-weight: bold;
+                font-size: 14px;
             }
             
             .time {
@@ -57,16 +58,36 @@
             
             .topcontainer {
                 border: thin solid rgba(100, 100, 100, 0.6);
-                //padding: 5px;
+                padding-bottom: 20px;
                 margin-bottom:10px;
                 padding-left: 10px;
                 
                 box-shadow: 0 0 6px 1px rgba(100, 100, 100, 0.5);
             }
             
+            #tiedot {
+                position: relative;
+                float: right;
+                margin-right: 10px;
+                padding-left: 5px;
+                //font-style: italic;
+                font-size: 14px;
+                border-left: thin solid rgba(100, 100, 100, 0.6);
+            }
+            
+            #aloittaja {
+                font-weight: bold;
+            }
+            
+            #luotu {
+                font-style: italic;
+            }
+            
+            
             #sisalto {
                 padding: 2px;
                 margin-top: 20px;
+                margin-right: 40px;
                 margin-bottom:20px;
                 font-size: 18px;
                 color: #333;
@@ -95,6 +116,11 @@
             
             li {
                 margin-bottom: 6px;
+                font-size: 14px;
+            }
+            
+            #teksti {
+                font-size: 16px;
             }
             
             input[type=text] {
@@ -113,16 +139,33 @@
         <div class="container">
 
             <h1>Yksisarvisten keskustelufoorumi</h1>
-            <div class="topcontainer">
-            <h3>
+            
+            
+            
+            
+            <h2>
                 <a th:href="@{~/}">Koti</a> > 
                 <a th:href="@{~/alue/{id}(id=${alue.tunnus})}">
                     <span th:text="${alue.nimi}">Alue</span>
-                </a> > 
+                </a>
+                
+            </h2>
+            
+            <div class="topcontainer">
+                
+
+                
+            <h3>
                 <span th:text="${aihe.otsikko}">Aihe</span>
             </h3>
             
+            <div id="tiedot">
+                Aloittanut <span id="aloittaja"  th:text="${aihe.aloittaja}">Aloittaja</span> <br/>
+                Lis&auml;tty <span id="luotu"  th:text="${aihe.luotu}">Aloittaja</span>
+            </div>
+            
             <span id="sisalto" th:text="${aihe.sisalto}">Sisalto</span>
+            
             </div>
             
             <table>
@@ -132,7 +175,7 @@
                     <li  th:each="msg : ${viestit}">
                         <span th:text="${msg.lahettaja}" class="author"></span>
                         <span th:text="${msg.lahetetty}" class="time"></span><br/>
-                        <span th:text="${msg.teksti}"></span>
+                        <span id="teksti" th:text="${msg.teksti}"></span>
                     </li>         
                 </ol>
                     </td>
