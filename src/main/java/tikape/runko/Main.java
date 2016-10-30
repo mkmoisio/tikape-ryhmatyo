@@ -30,8 +30,14 @@ public class Main {
         
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
-
+            boolean virhesyote = false;
+            
+            if (req.queryParams().contains("virhesyote")) {
+                virhesyote = true;
+            }
+            
             map.put("alueet", alueDao.findAll());
+            map.put("virhesyote", virhesyote);
 
             return new ModelAndView(map, "Alueet");
         }, new ThymeleafTemplateEngine());
@@ -40,10 +46,15 @@ public class Main {
             HashMap<String, Object> data = new HashMap<>();
 
             Integer sivuNro = 1;
+            boolean virhesyote = false;
             
             if (req.queryParams().contains("sivu")) {
                 sivuNro = Integer.parseInt(req.queryParams("sivu"));
-            } 
+            }
+            
+            if (req.queryParams().contains("virhesyote")) {
+                virhesyote = true;
+            }
             
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":id")));
             List<Aihe> aiheet = aiheDao.findAllInAluePerPage(alue, sivuNro);
@@ -62,6 +73,7 @@ public class Main {
             data.put("alue", alue);
             data.put("aiheet", aiheet);
             data.put("sivu", sivuNro);
+            data.put("virhesyote", virhesyote);
             
             return new ModelAndView(data, "Aiheet");
         }, new ThymeleafTemplateEngine());
@@ -71,6 +83,7 @@ public class Main {
             
             Integer sivuNro = 1;
             Integer raja = 4;
+            boolean virhesyote = false;
             
             if (req.queryParams().contains("sivu")) {
                 sivuNro = Integer.parseInt(req.queryParams("sivu"));
@@ -78,7 +91,11 @@ public class Main {
             
             if (req.queryParams().contains("raja")) {
                 raja = Integer.parseInt(req.queryParams("raja"));
-            } 
+            }
+            
+            if (req.queryParams().contains("virhesyote")) {
+                virhesyote = true;
+            }
             
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueid")));
             Aihe aihe = aiheDao.findOne(Integer.parseInt(req.params(":aiheid")));
@@ -100,42 +117,58 @@ public class Main {
             data.put("viestit", viestit);
             data.put("sivu", sivuNro);
             data.put("raja", raja);
+            data.put("virhesyote", virhesyote);
             
             return new ModelAndView(data, "Viestit");
         }, new ThymeleafTemplateEngine());
         
         post("/addAlue", (req, res) -> {
-            String alueOtsikko = req.queryParams("alueOtsikko");
-            String alueKuvaus = req.queryParams("alueKuvaus");
-            Alue alue = new Alue(alueOtsikko, alueKuvaus);
+            String nimi = req.queryParams("alueOtsikko");
+            String kuvaus = req.queryParams("alueKuvaus");
             
-            alue = alueDao.create(alue);
-
-            res.redirect("/alue/" + alue.getTunnus());
+            if (!nimi.isEmpty() && nimi.length() < 20) {
+                Alue alue = new Alue(nimi, kuvaus);
+                alueDao.create(alue);
+                res.redirect("/alue/" + alue.getTunnus());
+            } else {
+                res.redirect("/?virhesyote=1");
+            }
+            
             return ""; 
         });
         
         post("/alue/:alueTunnus/addAihe", (req, res) -> {
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueTunnus")));
-            String aiheAloittaja = req.queryParams("aiheAloittaja");
-            String aiheOtsikko = req.queryParams("aiheOtsikko");
-            String aiheSisalto = req.queryParams("aiheSisalto");
+            String aloittaja = req.queryParams("aiheAloittaja");
+            String otsikko = req.queryParams("aiheOtsikko");
+            String sisalto = req.queryParams("aiheSisalto");
+                    
+            if (!aloittaja.isEmpty() && !otsikko.isEmpty() && !sisalto.isEmpty() &&
+                 aloittaja.length() < 40 && otsikko.length() < 255 && sisalto.length() < 255) {
+                Aihe aihe = new Aihe(alue ,aloittaja, sisalto, otsikko);
+                aiheDao.create(aihe);
+                res.redirect("/alue/" + req.params(":alueTunnus") + "/aihe/" + aihe.getTunnus());
+            } else {
+                res.redirect("/alue/" + req.params(":alueTunnus") + "?virhesyote=1");
+            }
             
-            Aihe aihe = new Aihe(alue ,aiheAloittaja, aiheSisalto, aiheOtsikko);
-            aihe = aiheDao.create(aihe);         
-            
-            res.redirect("/alue/" + req.params(":alueTunnus") + "/aihe/" + aihe.getTunnus());
             return ""; 
         });
         
         post("/alue/:alueTunnus/aihe/:aiheTunnus/addViesti", (req, res) -> {
             Alue alue = alueDao.findOne(Integer.parseInt(req.params(":alueTunnus")));
             Aihe aihe = aiheDao.findOne(Integer.parseInt(req.params(":aiheTunnus")));
-            String viestiTeksti = req.queryParams("teksti");
-            String viestiLahettaja = req.queryParams("viestiLahettaja");
             
-            Viesti viesti = new Viesti(aihe, viestiTeksti, viestiLahettaja);
-            viestiDao.create(viesti);
+            String lahettaja = req.queryParams("viestiLahettaja");
+            String teksti = req.queryParams("teksti");
+            
+            if (!teksti.isEmpty() && !lahettaja.isEmpty() &&
+                teksti.length() < 255 && lahettaja.length() < 40) {
+                Viesti viesti = new Viesti(aihe, teksti, lahettaja);
+                viestiDao.create(viesti);
+            } else {
+                res.redirect("/alue/" + alue.getTunnus() + "/aihe/" + aihe.getTunnus() + "?virhesyote=1");
+            }
             
             res.redirect("/alue/" + alue.getTunnus() + "/aihe/" + aihe.getTunnus());
             return "";

@@ -169,6 +169,10 @@
                 background-color: #008CBA;
                 color: white;
             }
+            
+            .virhesyote {
+                color: #BE3500;
+            }
         </style>
     </head>
 
@@ -249,11 +253,9 @@
                     <textarea cols="53" rows="5" name="teksti" maxlength="255"/><br/>
 
                     <input class="laheta" type="submit" value="L&auml;het&auml; viesti"/>
+                    <span class="virhesyote" th:if="${virhesyote}">Tarkista sy&ouml;tt&ouml;tiedot!</span>
                 </form>
             </div>
-
-            <a th:href="@{~/{tmp} (tmp=${alue.tunnus})}">Paluu</a>
-         
         </div>
       
     </body>

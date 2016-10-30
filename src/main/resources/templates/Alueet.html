@@ -94,6 +94,10 @@
                 background-color: #008CBA;
                 color: white;
             }
+            
+            .virhesyote {
+                color: #BE3500;
+            }
         </style>
     </head>
 
@@ -135,6 +139,7 @@
                     <input type="text" class="long" name="alueKuvaus" maxlength="100"/> <br/>
 
                     <input class="laheta" type="submit" value="Lis&auml;&auml; alue"/>
+                    <span class="virhesyote" th:if="${virhesyote}">Tarkista sy&ouml;tt&ouml;tiedot!</span>
                 </form>
             </div>
         </div>
